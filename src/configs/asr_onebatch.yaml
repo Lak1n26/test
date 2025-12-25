@@ -1,0 +1,52 @@
+# ASR One-Batch Test Configuration
+# For pipeline debugging - should achieve near-zero CER/WER
+defaults:
+  - model: deepspeech2_small
+  - writer: wandb_asr
+  - datasets: librispeech_onebatch
+  - dataloader: asr_small
+  - transforms: asr_no_norm
+  - _self_
+
+optimizer:
+  _target_: torch.optim.Adam
+  lr: 1e-3
+
+lr_scheduler:
+  _target_: torch.optim.lr_scheduler.StepLR
+  gamma: 1.0  # No decay for one-batch test
+  step_size: 1000
+
+loss_function:
+  _target_: src.loss.CTCLoss
+  blank: 0
+  zero_infinity: true
+
+metrics:
+  train:
+    - _target_: src.metrics.CERMetric
+      name: "CER"
+      use_beam_search: false
+  inference:
+    - _target_: src.metrics.WERMetric
+      name: "WER"
+      use_beam_search: false
+    - _target_: src.metrics.CERMetric
+      name: "CER"
+      use_beam_search: false
+
+trainer:
+  log_step: 10
+  n_epochs: 2
+  epoch_len: 50  # Short epochs
+  device_tensors: ["spectrogram", "text_encoded"]
+  resume_from: null
+  device: auto
+  override: true  # Override previous runs
+  monitor: "min val_loss"
+  save_period: 1  # Save every epoch
+  early_stop: 100
+  save_dir: "saved"
+  seed: 42
+  grad_clip: 10.0
+

@@ -1,0 +1,13 @@
+# LibriSpeech test datasets configuration (for inference/evaluation)
+test-clean:
+  _target_: src.datasets.LibriSpeechDataset
+  part: "test-clean"
+  max_audio_length: null
+  max_text_length: null
+  shuffle_index: false
+test-other:
+  _target_: src.datasets.LibriSpeechDataset
+  part: "test-other"
+  max_audio_length: null
+  max_text_length: null
+  shuffle_index: false

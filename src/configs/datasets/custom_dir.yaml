@@ -1,0 +1,17 @@
+# Custom directory dataset configuration
+# Use this for inference on custom data
+#
+# Expected structure:
+#   ${data_dir}/
+#   ├── audio/
+#   │   ├── utterance1.wav
+#   │   └── ...
+#   └── transcriptions/  (optional)
+#       ├── utterance1.txt
+#       └── ...
+inference:
+  _target_: src.datasets.CustomDirDataset
+  data_dir: ???  # Set via command line: datasets.inference.data_dir=/path/to/data
+  max_audio_length: null
+  max_text_length: null
+  shuffle_index: false

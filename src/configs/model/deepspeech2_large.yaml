@@ -1,0 +1,12 @@
+# DeepSpeech2 Large model configuration
+# More capacity for better performance
+_target_: src.model.DeepSpeech2
+n_feats: 80  # Number of mel bins
+n_tokens: 29  # Vocabulary size (blank + 27 chars + unk)
+n_conv_layers: 3
+conv_channels: 64
+n_rnn_layers: 7
+rnn_hidden_size: 800
+rnn_type: "gru"
+bidirectional: true
+dropout: 0.2

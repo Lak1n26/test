@@ -1,0 +1,19 @@
+# LibriSpeech full training configuration (train-clean-100 + train-clean-360)
+train:
+  _target_: src.datasets.LibriSpeechDataset
+  part: "train-clean-100"
+  max_audio_length: 20.0
+  max_text_length: null
+  shuffle_index: true
+train2:
+  _target_: src.datasets.LibriSpeechDataset
+  part: "train-clean-360"
+  max_audio_length: 20.0
+  max_text_length: null
+  shuffle_index: true
+val:
+  _target_: src.datasets.LibriSpeechDataset
+  part: "dev-clean"
+  max_audio_length: null
+  max_text_length: null
+  shuffle_index: false

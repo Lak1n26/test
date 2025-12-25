@@ -1,0 +1,15 @@
+# ASR metrics configuration
+# WER and CER with greedy decoding
+metrics:
+  train:
+    - _target_: src.metrics.CERMetric
+      name: "CER"
+      use_beam_search: false
+  inference:
+    - _target_: src.metrics.WERMetric
+      name: "WER"
+      use_beam_search: false
+    - _target_: src.metrics.CERMetric
+      name: "CER"
+      use_beam_search: false
+

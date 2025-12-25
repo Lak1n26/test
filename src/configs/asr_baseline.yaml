@@ -1,0 +1,57 @@
+# ASR Baseline Configuration
+# DeepSpeech2 + CTC on LibriSpeech train-clean-100
+defaults:
+  - model: deepspeech2
+  - writer: wandb_asr
+  - datasets: librispeech_train_clean100
+  - dataloader: asr
+  - transforms: asr_with_augmentations
+  - _self_
+
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: 3e-4
+  weight_decay: 1e-5
+
+lr_scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  max_lr: 3e-4
+  steps_per_epoch: ${trainer.epoch_len}
+  epochs: ${trainer.n_epochs}
+  pct_start: 0.1
+  anneal_strategy: "cos"
+
+loss_function:
+  _target_: src.loss.CTCLoss
+  blank: 0
+  zero_infinity: true
+
+# ASR Metrics
+metrics:
+  train:
+    - _target_: src.metrics.CERMetric
+      name: "CER"
+      use_beam_search: false
+  inference:
+    - _target_: src.metrics.WERMetric
+      name: "WER"
+      use_beam_search: false
+    - _target_: src.metrics.CERMetric
+      name: "CER"
+      use_beam_search: false
+
+trainer:
+  log_step: 100
+  n_epochs: 50
+  epoch_len: 1000
+  device_tensors: ["spectrogram", "text_encoded"]
+  resume_from: null
+  device: auto
+  override: false
+  monitor: "min val_WER"
+  save_period: 5
+  early_stop: 10
+  save_dir: "saved"
+  seed: 42
+  grad_clip: 10.0  # Gradient clipping for stability
+

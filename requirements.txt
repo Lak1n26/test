@@ -1,0 +1,28 @@
+# Deep Learning
+torch>=2.0.0
+torchaudio>=2.0.0
+torchvision>=0.15.0
+
+# Data processing
+numpy>=1.24.0
+pandas
+soundfile  # For audio loading (avoids torchaudio compatibility issues)
+
+# Visualization & Logging
+matplotlib
+tqdm
+wandb
+# comet_ml  # Optional: uncomment if using CometML
+
+# Configuration
+hydra-core
+omegaconf
+
+# Code quality (optional)
+black
+isort
+pre-commit
+
+# For demo notebook
+ipywidgets
+gdown

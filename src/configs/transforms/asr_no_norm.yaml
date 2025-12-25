@@ -1,0 +1,7 @@
+# ASR transforms without normalization
+# Use when model handles normalization internally
+transforms:
+  instance_transforms: {}
+  batch_transforms:
+    train: {}
+    inference: {}

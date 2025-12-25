@@ -1,0 +1,33 @@
+# ASR Inference Configuration
+defaults:
+  - model: deepspeech2
+  - datasets: librispeech_test
+  - dataloader: example
+  - transforms: asr
+  - _self_
+
+metrics:
+  inference:
+    - _target_: src.metrics.WERMetric
+      name: "WER"
+      use_beam_search: false
+    - _target_: src.metrics.CERMetric
+      name: "CER"
+      use_beam_search: false
+    - _target_: src.metrics.WERMetric
+      name: "WER_beam"
+      use_beam_search: true
+      beam_size: 10
+    - _target_: src.metrics.CERMetric
+      name: "CER_beam"
+      use_beam_search: true
+      beam_size: 10
+
+inferencer:
+  device_tensors: ["spectrogram", "text_encoded"]
+  device: auto
+  save_path: "asr_predictions"
+  seed: 42
+  from_pretrained: "saved/model_best.pth"
+  beam_size: 10  # For saving beam search predictions
+

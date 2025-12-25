@@ -1,0 +1,15 @@
+# ASR transforms configuration
+# Mel spectrogram extraction for audio
+transforms:
+  instance_transforms: {}
+  batch_transforms:
+    # Batch transforms are applied after collation on GPU
+    train:
+      # Normalize spectrograms per instance
+      spectrogram:
+        _target_: src.transforms.SpectrogramNormalize
+        per_instance: true
+    inference:
+      spectrogram:
+        _target_: src.transforms.SpectrogramNormalize
+        per_instance: true

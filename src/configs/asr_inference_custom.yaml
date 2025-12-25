@@ -1,0 +1,26 @@
+# ASR Inference on Custom Dataset
+# Usage: python inference.py -cn=asr_inference_custom datasets.inference.data_dir=/path/to/data
+defaults:
+  - model: deepspeech2
+  - datasets: custom_dir
+  - dataloader: example
+  - transforms: asr
+  - _self_
+
+metrics:
+  inference:
+    - _target_: src.metrics.WERMetric
+      name: "WER"
+      use_beam_search: false
+    - _target_: src.metrics.CERMetric
+      name: "CER"
+      use_beam_search: false
+
+inferencer:
+  device_tensors: ["spectrogram"]
+  device: auto
+  save_path: "custom_predictions"
+  seed: 42
+  from_pretrained: "saved/model_best.pth"
+  beam_size: null  # Set to enable beam search
+

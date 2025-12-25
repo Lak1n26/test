@@ -1,0 +1,25 @@
+# ASR metrics with beam search decoding
+# Includes both greedy and beam search metrics for comparison
+metrics:
+  train:
+    - _target_: src.metrics.CERMetric
+      name: "CER"
+      use_beam_search: false
+  inference:
+    # Greedy decoding metrics
+    - _target_: src.metrics.WERMetric
+      name: "WER_greedy"
+      use_beam_search: false
+    - _target_: src.metrics.CERMetric
+      name: "CER_greedy"
+      use_beam_search: false
+    # Beam search decoding metrics
+    - _target_: src.metrics.WERMetric
+      name: "WER_beam"
+      use_beam_search: true
+      beam_size: 10
+    - _target_: src.metrics.CERMetric
+      name: "CER_beam"
+      use_beam_search: true
+      beam_size: 10
+

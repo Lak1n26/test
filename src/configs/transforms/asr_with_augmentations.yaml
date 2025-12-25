@@ -1,0 +1,24 @@
+# ASR transforms with augmentations
+# Includes SpecAugment for training
+transforms:
+  instance_transforms: {}
+  batch_transforms:
+    # Batch transforms are applied after collation on GPU
+    train:
+      # SpecAugment for training
+      spectrogram:
+        _target_: torch.nn.Sequential
+        _args_:
+          - _target_: src.transforms.SpectrogramNormalize
+            per_instance: true
+          - _target_: src.transforms.SpecAugment
+            freq_mask_param: 27
+            time_mask_param: 100
+            num_freq_masks: 2
+            num_time_masks: 2
+            p: 0.5
+    inference:
+      # No augmentation for inference, only normalization
+      spectrogram:
+        _target_: src.transforms.SpectrogramNormalize
+        per_instance: true

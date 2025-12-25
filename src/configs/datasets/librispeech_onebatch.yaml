@@ -1,0 +1,16 @@
+# LibriSpeech one-batch test configuration
+# For debugging and pipeline verification
+train:
+  _target_: src.datasets.LibriSpeechDataset
+  part: "dev-clean"
+  max_audio_length: 10.0
+  max_text_length: null
+  shuffle_index: false
+  limit: 4  # Only 4 samples for one-batch test
+val:
+  _target_: src.datasets.LibriSpeechDataset
+  part: "dev-clean"
+  max_audio_length: 10.0
+  max_text_length: null
+  shuffle_index: false
+  limit: 4  # Same samples for validation

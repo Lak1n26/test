@@ -1,0 +1,15 @@
+# Instance-level audio augmentations
+# Apply these in dataset configuration
+#
+# Example usage in dataset config:
+#   datasets:
+#     train:
+#       _target_: src.datasets.LibriSpeechDataset
+#       instance_transforms:
+#         audio:
+#           _target_: src.transforms.AudioAugmentations
+instance_transforms:
+  audio:
+    _target_: src.transforms.AudioAugmentations
+    sample_rate: 16000
+

@@ -1,0 +1,14 @@
+# ASR transforms with SpecAugment only (no normalization)
+# Use when model handles normalization internally
+transforms:
+  instance_transforms: {}
+  batch_transforms:
+    train:
+      spectrogram:
+        _target_: src.transforms.SpecAugment
+        freq_mask_param: 27
+        time_mask_param: 100
+        num_freq_masks: 2
+        num_time_masks: 2
+        p: 0.5
+    inference: {}

@@ -1,0 +1,9 @@
+_target_: src.logger.WandBWriter
+project_name: "asr_project"
+entity: null
+run_name: "asr_training"
+mode: "online"
+loss_names: ["loss"]  # CTC loss
+log_checkpoints: True  # Save checkpoints to W&B
+id_length: 8
+

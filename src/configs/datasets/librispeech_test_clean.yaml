@@ -1,0 +1,8 @@
+# LibriSpeech test-clean only (for quick evaluation)
+test-clean:
+  _target_: src.datasets.LibriSpeechDataset
+  part: "test-clean"
+  max_audio_length: null
+  max_text_length: null
+  shuffle_index: false
+

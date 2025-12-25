@@ -1,0 +1,9 @@
+# Dummy writer that does nothing (for local debugging)
+_target_: src.logger.dummy.DummyWriter
+project_name: "asr_project"
+entity: null
+run_name: "local_debug"
+mode: "disabled"
+loss_names: ["loss"]
+log_checkpoints: false
+id_length: 8
