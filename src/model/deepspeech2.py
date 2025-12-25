@@ -41,7 +41,7 @@ class MaskConv2d(nn.Module):
         padding = self.conv.padding[1]
 
         new_lengths = (lengths + 2 * padding - kernel_size) // stride + 1
-        new_lengths = new_lengths.clamp(min=1)
+        new_lengths = new_lengths.clamp(min=1).to(output.device)
 
         # Create mask and apply
         batch_size, channels, freq, time = output.shape

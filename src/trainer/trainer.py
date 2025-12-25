@@ -1,7 +1,7 @@
 import random
 
 import torch
-
+import pandas as pd
 from src.metrics.tracker import MetricTracker
 from src.metrics.utils import calc_cer, calc_wer
 from src.text_encoder import TextEncoder
@@ -121,7 +121,11 @@ class Trainer(BaseTrainer):
 
         for i, spec in enumerate(spectrograms):
             # spec shape: [n_mels, time]
-            self.writer.add_image(f"spectrogram_{i}", spec.unsqueeze(0))
+            # Normalize to [0, 255] for wandb
+            spec_normalized = spec - spec.min()
+            if spec_normalized.max() > 0:
+                spec_normalized = spec_normalized / spec_normalized.max() * 255
+            self.writer.add_image(f"spectrogram_{i}", spec_normalized.unsqueeze(0))
 
     def _log_audio(self, batch, n_examples=1):
         """
@@ -173,7 +177,9 @@ class Trainer(BaseTrainer):
 
         # Log as table
         if hasattr(self.writer, "add_table"):
-            self.writer.add_table("predictions", table_data)
+            
+            df = pd.DataFrame(table_data)
+            self.writer.add_table("predictions", df)
         else:
             # Fallback: log as text
             text_log = "\n".join([
