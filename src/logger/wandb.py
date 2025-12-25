@@ -215,8 +215,12 @@ class WandBWriter:
             table_name (str): name of the table to use in the tracker.
             table (DataFrame): table content.
         """
+        # Create table from columns and data (more reliable than dataframe)
+        columns = list(table.columns)
+        data = table.values.tolist()
+        wandb_table = self.wandb.Table(columns=columns, data=data)
         self.wandb.log(
-            {self._object_name(table_name): self.wandb.Table(dataframe=table)},
+            {self._object_name(table_name): wandb_table},
             step=self.step,
         )
 

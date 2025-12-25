@@ -1,0 +1,8 @@
+# LibriSpeech test-other only (harder evaluation set)
+test-other:
+  _target_: src.datasets.LibriSpeechDataset
+  part: "test-other"
+  max_audio_length: null
+  max_text_length: null
+  shuffle_index: false
+

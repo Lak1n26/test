@@ -121,10 +121,12 @@ class Trainer(BaseTrainer):
 
         for i, spec in enumerate(spectrograms):
             # spec shape: [n_mels, time]
-            # Normalize to [0, 255] for wandb
+            # Normalize to [0, 1] and flip for better visualization
             spec_normalized = spec - spec.min()
             if spec_normalized.max() > 0:
-                spec_normalized = spec_normalized / spec_normalized.max() * 255
+                spec_normalized = spec_normalized / spec_normalized.max()
+            # Flip vertically so low frequencies are at bottom
+            spec_normalized = spec_normalized.flip(0)
             self.writer.add_image(f"spectrogram_{i}", spec_normalized.unsqueeze(0))
 
     def _log_audio(self, batch, n_examples=1):
@@ -175,26 +177,20 @@ class Trainer(BaseTrainer):
             }
             table_data.append(row)
 
-        # Log as table
-        if hasattr(self.writer, "add_table"):
-            
-            df = pd.DataFrame(table_data)
-            self.writer.add_table("predictions", df)
-        else:
-            # Fallback: log as text
-            text_log = "\n".join([
-                f"[{r['index']}] WER: {r['WER']}, CER: {r['CER']}\n"
-                f"  Target: {r['target']}\n"
-                f"  Pred:   {r['prediction']}"
-                for r in table_data
-            ])
-            self.writer.add_text("predictions", text_log)
-
-        # Also log random prediction as scalar-like text for quick view
-        if len(predictions) > 0:
-            idx = random.randint(0, len(predictions) - 1)
-            sample_text = (
-                f"Target: {texts[idx]}\n"
-                f"Pred: {predictions[idx]}"
-            )
-            self.writer.add_text("sample_prediction", sample_text)
+        # Log predictions as HTML table (more reliable display)
+        if len(table_data) > 0:
+            try:
+                import wandb
+                # Create HTML table
+                html = "<table border='1' style='border-collapse: collapse;'>"
+                html += "<tr><th>Target</th><th>Prediction</th><th>WER</th><th>CER</th></tr>"
+                for row in table_data:
+                    html += f"<tr><td>{row['target']}</td><td>{row['prediction']}</td>"
+                    html += f"<td>{row['WER']}</td><td>{row['CER']}</td></tr>"
+                html += "</table>"
+                
+                wandb.log({
+                    f"predictions_html": wandb.Html(html)
+                }, commit=False)
+            except Exception as e:
+                print(f"[DEBUG] Failed to log predictions: {e}")

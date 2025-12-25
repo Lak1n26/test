@@ -1,7 +1,7 @@
 # ASR Baseline Configuration
 # DeepSpeech2 + CTC on LibriSpeech train-clean-100
 defaults:
-  - model: deepspeech2
+  - model: deepspeech2_large
   - writer: wandb_asr
   - datasets: librispeech_train_clean100
   - dataloader: asr
@@ -42,15 +42,15 @@ metrics:
 
 trainer:
   log_step: 100
-  n_epochs: 10
-  epoch_len: 100
+  n_epochs: 50
+  epoch_len: 1000
   device_tensors: ["spectrogram", "text_encoded"]
   resume_from: null
   device: auto
   override: false
   monitor: "min val_WER"
   save_period: 2
-  early_stop: 3
+  early_stop: 5
   save_dir: "saved"
   seed: 42
   grad_clip: 10.0  # Gradient clipping for stability
